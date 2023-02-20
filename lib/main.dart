@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'loc.dart';
+import 'task_handler.dart';
 
 void main() {
   runApp(const MyApp());
+  runApp(const ExampleApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -12,13 +15,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return WithForegroundTask(
+        child: MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+    ));
   }
 }
 

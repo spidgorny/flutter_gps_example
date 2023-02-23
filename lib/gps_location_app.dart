@@ -1,10 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'gps_location_app.dart';
 import 'loc.dart';
-import 'task_handler.dart';
 
 class GpsLocationApp extends StatelessWidget {
   const GpsLocationApp({Key? key}) : super(key: key);
@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),

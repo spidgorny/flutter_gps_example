@@ -114,8 +114,21 @@ class _ExamplePageState extends State<ExamplePage> {
     }
   }
 
+  Future<void> _toggleForegroundTask() async {
+    var isRunning = await FlutterForegroundTask.isRunningService;
+    print('isRunning: $isRunning');
+    if (!isRunning) {
+      print('_startForegroundTask');
+      _startForegroundTask();
+    } else {
+      print('_stopForegroundTask');
+      FlutterForegroundTask.stopService();
+    }
+  }
+
   bool _registerReceivePort(ReceivePort? newReceivePort) {
     if (newReceivePort == null) {
+      print('!newReceivePort, skip register');
       return false;
     }
 
@@ -131,6 +144,8 @@ class _ExamplePageState extends State<ExamplePage> {
         }
       } else if (message is DateTime) {
         print('timestamp: ${message.toString()}');
+      } else {
+        print('receivePort listen');
       }
     });
 
@@ -178,7 +193,7 @@ class _ExamplePageState extends State<ExamplePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _startForegroundTask,
+        onPressed: _toggleForegroundTask,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),

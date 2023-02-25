@@ -20,7 +20,8 @@ class FirstTaskHandler extends TaskHandler {
 
   @override
   Future<void> onEvent(DateTime timestamp, SendPort? sendPort) async {
-    print('onEvent');
+    print('onEvent: $timestamp');
+    print('sendPort: $sendPort');
     // Send data to the main isolate.
     sendPort?.send(timestamp);
   }

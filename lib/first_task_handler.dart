@@ -2,7 +2,13 @@
 
 import 'dart:isolate';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:geolocator/geolocator.dart';
+
+import 'loc.dart';
+
+final dio = Dio();
 
 class FirstTaskHandler extends TaskHandler {
   SendPort? _sendPort;
@@ -16,12 +22,33 @@ class FirstTaskHandler extends TaskHandler {
     final customData =
         await FlutterForegroundTask.getData<String>(key: 'customData');
     print('customData: $customData');
+
+    await getPositionAndSendToUrl(sendPort);
+  }
+
+  Future<void> getPositionAndSendToUrl(SendPort? sendPort) async {
+    Position position = await determinePosition();
+    print(position);
+    sendPort?.send(position);
+    final response = await dio.post(
+        'https://webhook.site/1ccafabf-90fd-4438-a48c-1250a5fa343e',
+        data: {
+          'lat': position.latitude,
+          'lon': position.longitude,
+          'acc': position.accuracy,
+          'alt': position.altitude,
+          'speed': position.speed,
+          'speedAcc': position.speedAccuracy,
+          'head': position.heading,
+        });
+    print(response);
+    sendPort?.send(response);
   }
 
   @override
   Future<void> onEvent(DateTime timestamp, SendPort? sendPort) async {
     print('onEvent: $timestamp');
-    print('sendPort: $sendPort');
+    await getPositionAndSendToUrl(sendPort);
     // Send data to the main isolate.
     sendPort?.send(timestamp);
   }

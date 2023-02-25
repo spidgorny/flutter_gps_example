@@ -5,6 +5,7 @@ import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'first_task_handler.dart';
 
@@ -144,6 +145,8 @@ class _ExamplePageState extends State<ExamplePage> {
         }
       } else if (message is DateTime) {
         print('timestamp: ${message.toString()}');
+      } else if (message is Position) {
+        print('position: ${message.toString()}');
       } else {
         print('receivePort listen');
       }

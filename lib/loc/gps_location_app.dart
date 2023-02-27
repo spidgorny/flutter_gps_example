@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'loc.dart';
+import '../../loc/loc.dart';
 
 class GpsLocationApp extends StatelessWidget {
   const GpsLocationApp({Key? key}) : super(key: key);

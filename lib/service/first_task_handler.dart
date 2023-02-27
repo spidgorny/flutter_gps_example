@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'loc.dart';
+import '../../loc/loc.dart';
 
 final dio = Dio();
 

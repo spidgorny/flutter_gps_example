@@ -5,8 +5,10 @@ import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:flutter_gps_example/service/resume_route.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../loc/loc.dart';
 import 'first_task_handler.dart';
 
 @pragma('vm:entry-point')
@@ -15,8 +17,8 @@ void startCallback() {
   FlutterForegroundTask.setTaskHandler(FirstTaskHandler());
 }
 
-class ExampleApp extends StatelessWidget {
-  const ExampleApp({Key? key}) : super(key: key);
+class ServiceExampleApp extends StatelessWidget {
+  const ServiceExampleApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,7 @@ class ExamplePage extends StatefulWidget {
 
 class _ExamplePageState extends State<ExamplePage> {
   ReceivePort? _receivePort;
+  bool isActive = false;
 
   void _initForegroundTask() {
     FlutterForegroundTask.init(
@@ -74,6 +77,9 @@ class _ExamplePageState extends State<ExamplePage> {
   }
 
   Future<bool> _startForegroundTask() async {
+    if (!await checkLocationPermissions()) {
+      print('LOCATION permission denied');
+    }
     // "android.permission.SYSTEM_ALERT_WINDOW" permission must be granted for
     // onNotificationPressed function to be called.
     //
@@ -121,9 +127,15 @@ class _ExamplePageState extends State<ExamplePage> {
     if (!isRunning) {
       print('_startForegroundTask');
       _startForegroundTask();
+      setState(() {
+        isActive = true;
+      });
     } else {
       print('_stopForegroundTask');
       FlutterForegroundTask.stopService();
+      setState(() {
+        isActive = false;
+      });
     }
   }
 
@@ -198,30 +210,9 @@ class _ExamplePageState extends State<ExamplePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _toggleForegroundTask,
         tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-}
-
-class ResumeRoutePage extends StatelessWidget {
-  const ResumeRoutePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Resume Route'),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Navigate back to first route when tapped.
-            Navigator.of(context).pop();
-          },
-          child: const Text('Go back!'),
-        ),
+        child: isActive
+            ? const Icon(Icons.stop)
+            : const Icon(Icons.share_location),
       ),
     );
   }
